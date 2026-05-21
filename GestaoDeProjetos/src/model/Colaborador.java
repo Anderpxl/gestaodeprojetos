@@ -16,7 +16,6 @@ public class Colaborador {
     public Perfil getPerfil() { return perfil; }
     public void setPerfil(Perfil perfil) { this.perfil = perfil; }
 
-
     public Colaborador(){
 
     }
@@ -34,9 +33,7 @@ public class Colaborador {
     public String getCpf(){
         return this.cpf;
     }
-    public void setCpf(String cpf){
-        this.cpf = cpf;
-    }
+    public void setCpf(String cpf){this.cpf = cpf;}
     public String getEmail(){
         return this.email;
     }

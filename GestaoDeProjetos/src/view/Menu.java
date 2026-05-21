@@ -1,11 +1,23 @@
 package view;
 
+import controller.service.ColaboradorService;
+import controller.service.EquipeService;
 import controller.service.LoginService;
+import controller.service.ProjetoService;
 import dao.ColaboradorDAO;
+import dao.Conexao;
 import dao.EquipeDAO;
+import dao.ProjetoDAO;
 import model.Colaborador;
 import model.Equipe;
+import model.Projeto;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -23,128 +35,6 @@ public class Menu {
 
         if(usuarioLogado != null) {
             menuPrincipal();
-        }
-    }
-
-    private void cadastrarColaborador() {
-        Colaborador colaborador = new Colaborador();
-
-        System.out.println("\n===== CADASTRO DE COLABORADOR =====");
-
-        System.out.print("Nome: ");
-        colaborador.setNome(scanner.nextLine());
-
-        System.out.print("CPF: ");
-        colaborador.setCpf(scanner.nextLine());
-
-        System.out.print("Email: ");
-        colaborador.setEmail(scanner.nextLine());
-
-        System.out.print("Usuário: ");
-        colaborador.setUsuario(scanner.nextLine());
-
-        System.out.print("Senha: ");
-        colaborador.setSenha(scanner.nextLine());
-
-        System.out.print("Cargo (ADMINISTRADOR, GERENTE ou COLABORADOR): ");
-
-        colaborador.setPerfil(
-                Colaborador.Perfil.valueOf(
-                        scanner.nextLine().toUpperCase()
-                )
-        );
-
-        ColaboradorDAO dao = new ColaboradorDAO();
-
-        boolean sucesso = dao.inserir(colaborador);
-
-        if(sucesso) {
-            System.out.println("Colaborador cadastrado.");
-        } else {
-            System.out.println("Erro ao cadastrar.");
-        }
-    }
-
-    private void listarColaboradores() {
-        ColaboradorDAO dao = new ColaboradorDAO();
-
-        List<Colaborador> lista = dao.listar();
-
-        System.out.println("\n===== COLABORADORES =====");
-
-        for(Colaborador c : lista) {
-
-            System.out.println("ID: " + c.getId());
-
-            System.out.println("Nome: " + c.getNome());
-
-            System.out.println("Email: " + c.getEmail());
-
-            System.out.println("Usuário: " + c.getUsuario());
-
-            System.out.println("------------------");
-        }
-    }
-
-    private void cadastrarEquipe() {
-
-        Equipe equipe = new Equipe();
-
-        System.out.println("\n===== CADASTRO DE EQUIPE =====");
-
-        System.out.print("Nome da equipe: ");
-        equipe.setNomeEquipe(scanner.nextLine());
-
-        System.out.print("ID do gerente: ");
-
-        Colaborador gerente = new Colaborador();
-
-        gerente.setId(scanner.nextInt());
-
-        scanner.nextLine();
-
-        equipe.setGerente(gerente);
-
-        System.out.print("ID do líder: ");
-
-        Colaborador lider = new Colaborador();
-
-        lider.setId(scanner.nextInt());
-
-        scanner.nextLine();
-
-        equipe.setLider(lider);
-
-        EquipeDAO dao = new EquipeDAO();
-
-        boolean sucesso = dao.inserir(equipe);
-
-        if(sucesso) {
-            System.out.println("Equipe cadastrada.");
-        } else {
-            System.out.println("Erro ao cadastrar equipe.");
-        }
-    }
-
-    private void listarEquipes() {
-
-        EquipeDAO dao = new EquipeDAO();
-
-        List<Equipe> lista = dao.listar();
-
-        System.out.println("\n===== EQUIPES =====");
-
-        for(Equipe e : lista) {
-
-            System.out.println("ID: " + e.getId());
-
-            System.out.println("Equipe: " + e.getNomeEquipe());
-
-            System.out.println("Gerente: " + e.getGerente().getNome());
-
-            System.out.println("Líder: " + e.getLider().getNome());
-
-            System.out.println("------------------");
         }
     }
 
@@ -191,19 +81,19 @@ public class Menu {
         if(usuarioLogado == null) {
 
             System.out.println("Usuário ou senha inválidos.");
+            return;
 
-        } else {
-
+        }
             System.out.println("Bem-vindo, " + usuarioLogado.getNome());
-        }
-
-        if(usuarioLogado.getPerfil() == Colaborador.Perfil.GERENTE || usuarioLogado.getPerfil() == Colaborador.Perfil.ADMINISTRADOR) {
-
-        }
-
+            menuPrincipal();
     }
 
     public void menuPrincipal() {
+
+        ColaboradorService colaboradorService = new ColaboradorService();
+        EquipeService equipeService = new EquipeService();
+        ProjetoService projetoService = new ProjetoService();
+
 
         int opcao = -1;
 
@@ -216,7 +106,13 @@ public class Menu {
             System.out.println("4 - Listar colaboradores");
             System.out.println("5 - Listar equipes");
             System.out.println("6 - Listar projetos");
-            System.out.println("7 - Configurações");
+
+            if(usuarioLogado.getPerfil() == Colaborador.Perfil.ADMINISTRADOR || usuarioLogado.getPerfil() == Colaborador.Perfil.GERENTE) {
+
+                System.out.println("7 - Configurações");
+
+            }
+
             System.out.println("0 - Sair");
 
             opcao = scanner.nextInt();
@@ -249,7 +145,14 @@ public class Menu {
                     break;
 
                 case 7:
-                    menuConfiguracoes();
+                    if(usuarioLogado.getPerfil() == Colaborador.Perfil.ADMINISTRADOR || usuarioLogado.getPerfil() == Colaborador.Perfil.GERENTE) {
+
+                        menuConfiguracoes();
+
+                    } else {
+
+                        System.out.println("Acesso negado.");
+                    }
                     break;
 
                 case 0:
