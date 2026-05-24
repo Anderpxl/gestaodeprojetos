@@ -121,27 +121,27 @@ public class Menu {
             switch(opcao) {
 
                 case 1:
-                    cadastrarColaborador();
+                    colaboradorService.cadastrarColaborador();
                     break;
 
                 case 2:
-                    cadastrarEquipe();
+                    equipeService.cadastrarEquipe();
                     break;
 
                 case 3:
-                    cadastrarProjeto();
+                    projetoService.cadastrarProjeto();
                     break;
 
                 case 4:
-                    listarColaboradores();
+                    colaboradorService.listarColaboradores();
                     break;
 
                 case 5:
-                    listarEquipes();
+                    equipeService.listarEquipes();
                     break;
 
                 case 6:
-                    listarProjetos();
+                    projetoService.listarProjetos();
                     break;
 
                 case 7:

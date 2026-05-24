@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class ColaboradorService {
 
-    private void cadastrarColaborador() {
+    public void cadastrarColaborador() {
 
         Colaborador colaborador = new Colaborador();
 
@@ -50,7 +50,7 @@ public class ColaboradorService {
         }
     }
 
-    private void listarColaboradores() {
+    public void listarColaboradores() {
         ColaboradorDAO dao = new ColaboradorDAO();
 
         List<Colaborador> lista = dao.listar();

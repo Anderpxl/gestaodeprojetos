@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class EquipeService {
 
-    private void cadastrarEquipe() {
+    public void cadastrarEquipe() {
 
         Equipe equipe = new Equipe();
 
@@ -51,7 +51,7 @@ public class EquipeService {
         }
     }
 
-    private void listarEquipes() {
+    public void listarEquipes() {
 
         EquipeDAO dao = new EquipeDAO();
 

@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class ProjetoService {
 
-    private void cadastrarProjeto() {
+    public void cadastrarProjeto() {
 
         Projeto projeto = new Projeto();
 
@@ -51,7 +51,7 @@ public class ProjetoService {
         }
     }
 
-    private void listarProjetos(){
+    public void listarProjetos(){
 
         ProjetoDAO dao = new ProjetoDAO();
 
