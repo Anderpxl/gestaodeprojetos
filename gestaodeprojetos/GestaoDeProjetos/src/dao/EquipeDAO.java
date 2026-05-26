@@ -51,14 +51,17 @@ public class EquipeDAO {
         List<Equipe> lista = new ArrayList<>();
 
         String sql = """
-                SELECT
-                    e.id,
-                    e.nome_equipe,
-                    g.id AS gerente_id,
-                    g.nome AS gerente_nome
-                FROM equipes e
-                JOIN colaboradores g
-                    ON e.gerente_id = g.id
+            SELECT
+            e.id,
+            e.nome_equipe,
+
+            g.id AS gerente_id,
+            g.nome AS gerente_nome
+
+            FROM gestaodeprojeto.equipes e
+
+            LEFT JOIN gestaodeprojeto.colaboradores g
+            ON e.gerente_id = g.id
         """;
 
         try(
@@ -75,12 +78,22 @@ public class EquipeDAO {
                 equipe.setId(rs.getInt("id"));
                 equipe.setNomeEquipe(rs.getString("nome_equipe"));
 
-                Colaborador gerente = new Colaborador();
+                int gerenteId = rs.getInt("gerente_id");
 
-                gerente.setId(rs.getInt("gerente_id"));
-                gerente.setNome(rs.getString("gerente_nome"));
+                if (!rs.wasNull()) {
 
-                equipe.setGerente(gerente);
+                    Colaborador gerente = new Colaborador();
+
+                    gerente.setId(gerenteId);
+
+                    gerente.setNome(rs.getString("gerente_nome"));
+
+                    equipe.setGerente(gerente);
+
+                } else {
+
+                    equipe.setGerente(null);
+                }
 
                 List<Colaborador> colaboradores = buscarColaboradoresEquipe(conn, equipe.getId());
 
@@ -263,7 +276,7 @@ public class EquipeDAO {
         }
     }
 
-    public void alterarGerente(int equipeId, int gerenteId) {
+    public void adicionarGerente(int equipeId, int gerenteId) {
 
         String sql = """
         UPDATE gestaodeprojeto.equipes
@@ -273,11 +286,46 @@ public class EquipeDAO {
 
         try (
                 Connection conn = Conexao.conectar();
+
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setInt(1, gerenteId);
+
             stmt.setInt(2, equipeId);
+
+            int linhasAfetadas = stmt.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+
+                System.out.println("Gerente vinculado à equipe.");
+
+            } else {
+
+                System.out.println("Equipe não encontrada.");
+
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void removerGerente(int gerenteEquipeId) {
+
+        String sql = """
+        UPDATE gestaodeprojeto.equipes
+        SET gerente_id = NULL
+        WHERE id = ?
+        """;
+
+        try (
+                Connection conn = Conexao.conectar();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, gerenteEquipeId);
 
             stmt.executeUpdate();
 
@@ -286,11 +334,9 @@ public class EquipeDAO {
         }
     }
 
-    public void removerGerente(int equipeId) {
-
+    public void excluirEquipe(int equipeId) {
         String sql = """
-        UPDATE gestaodeprojeto.equipes
-        SET gerente_id = NULL
+        DELETE FROM gestaodeprojeto.equipes
         WHERE id = ?
         """;
 

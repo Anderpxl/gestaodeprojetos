@@ -35,8 +35,7 @@ public class ColaboradorService {
 
         System.out.print("Cargo (ADMINISTRADOR, GERENTE ou COLABORADOR): ");
 
-        colaborador.setPerfil(
-                Colaborador.Perfil.valueOf(scanner.nextLine().toUpperCase()));
+        colaborador.setPerfil(Colaborador.Perfil.valueOf(scanner.nextLine().toUpperCase()));
 
         ColaboradorDAO dao = new ColaboradorDAO();
 

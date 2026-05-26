@@ -17,22 +17,18 @@ public class EquipeService {
 
         System.out.println("===== CADASTRAR EQUIPE =====");
 
-        // Nome da equipe
         System.out.print("Nome da equipe: ");
 
         String nomeEquipe = scanner.nextLine();
 
-        // Gerente
         System.out.print("ID do gerente: ");
 
         int gerenteId = scanner.nextInt();
 
         scanner.nextLine();
 
-        // Criar equipe
         int equipeId = equipeDAO.criarEquipe(nomeEquipe, gerenteId);
 
-        // Adicionar colaboradores
         System.out.print(
                 "Quantos colaboradores deseja adicionar? "
         );
@@ -54,10 +50,7 @@ public class EquipeService {
             equipeDAO.adicionarColaborador(equipeId, colaboradorId);
         }
 
-        // Adicionar projeto opcional
-        System.out.print(
-                "Deseja adicionar projeto? (S/N): "
-        );
+        System.out.print("Deseja adicionar projeto? (S/N): ");
 
         String resposta = scanner.nextLine();
 
@@ -67,15 +60,10 @@ public class EquipeService {
 
             int projetoId = scanner.nextInt();
 
-            equipeDAO.adicionarProjeto(
-                    equipeId,
-                    projetoId
-            );
+            equipeDAO.adicionarProjeto(equipeId, projetoId);
         }
 
-        System.out.println(
-                "\nEquipe cadastrada com sucesso!"
-        );
+        System.out.println("\nEquipe cadastrada com sucesso!");
     }
 
     public void listarEquipes() {
@@ -90,7 +78,17 @@ public class EquipeService {
 
             System.out.println("ID: " + e.getId());
             System.out.println("Equipe: " + e.getNomeEquipe());
-            System.out.println("Gerente: " + e.getGerente().getNome());
+
+            if (e.getGerente() != null) {
+
+                System.out.println("Gerente: " + e.getGerente().getNome());
+
+            } else {
+
+                System.out.println(
+                        "Gerente: nenhum gerente atribuido à equipe"
+                );
+            }
 
             for(Colaborador c : e.getColaboradores()) {
                 System.out.println("- "+ c.getNome());
@@ -122,8 +120,9 @@ public class EquipeService {
         System.out.println("6 - Alterar colaborador");
         System.out.println("7 - Remover colaborador");
         System.out.println("8 - Adicionar gerente");
-        System.out.println("9 - Trocar gerente");
-        System.out.println("10 - Remover gerente");
+        System.out.println("9 - Remover gerente");
+        System.out.print("10 - Excluir equipe");
+        System.out.println("\n0 - Sair");
 
         int opcao = scanner.nextInt();
 
@@ -132,6 +131,8 @@ public class EquipeService {
         switch (opcao) {
 
             case 1:
+
+                System.out.println("\n===== ALTERAR NOME DA EQUIPE =====");
 
                 System.out.print("Novo nome da equipe: ");
 
@@ -145,6 +146,8 @@ public class EquipeService {
 
             case 2:
 
+                System.out.println("\n===== ADICIONAR PROJETO =====");
+
                 System.out.print("ID do projeto: ");
 
                 int projetoId = scanner.nextInt();
@@ -157,6 +160,8 @@ public class EquipeService {
 
             case 3:
 
+                System.out.println("\n===== ALTERAR PROJETO =====");
+
                 System.out.print("ID do projeto atual: ");
 
                 int projetoAtual = scanner.nextInt();
@@ -167,11 +172,13 @@ public class EquipeService {
 
                 equipeDAO.trocarProjeto(equipeId, projetoAtual, novoProjeto);
 
-                System.out.println("Projeto trocado!");
+                System.out.println("Projeto alterado!");
 
                 break;
 
             case 4:
+
+                System.out.println("\n===== REMOVER PROJETO =====");
 
                 System.out.print("ID do projeto: ");
 
@@ -185,6 +192,8 @@ public class EquipeService {
 
             case 5:
 
+                System.out.println("\n===== ADICIONAR COLABORADOR =====");
+
                 System.out.print("ID do colaborador: ");
 
                 int colaboradorId = scanner.nextInt();
@@ -197,11 +206,13 @@ public class EquipeService {
 
             case 6:
 
+                System.out.println("\n===== ALTERAR COLABORADOR =====");
+
                 System.out.print("ID colaborador atual: ");
 
                 int colaboradorAtual = scanner.nextInt();
 
-                System.out.print("Novo colaborador: ");
+                System.out.print("ID colaborador novo: ");
 
                 int novoColaborador = scanner.nextInt();
 
@@ -213,36 +224,63 @@ public class EquipeService {
 
             case 7:
 
+                System.out.println("\n===== REMOVER COLABORADOR =====");
+
                 System.out.print("ID do colaborador: ");
 
                 int removerColaborador = scanner.nextInt();
 
                 equipeDAO.excluirColaborador(equipeId, removerColaborador);
 
-                System.out.println("Colaborador removido do projeto!");
+                System.out.println("Colaborador removido da equipe!");
 
                 break;
 
             case 8:
 
-            case 9:
+                System.out.println("\n===== ADICIONAR GERENTE =====");
 
-                System.out.print("ID do gerente: ");
+                System.out.print("Digite o ID do gerente: ");
 
                 int gerenteId = scanner.nextInt();
 
-                equipeDAO.alterarGerente(equipeId, gerenteId);
+                equipeDAO.adicionarGerente(equipeId, gerenteId);
 
-                System.out.println("Gerente atualizado!");
+                System.out.println("Gerente adicionado com sucesso!");
+
+                break;
+
+            case 9:
+
+                System.out.println("\n===== REMOVER GERENTE =====");
+
+                System.out.println("ID do gerente: ");
+
+                int gerenteEquipeId = scanner.nextInt();
+
+                equipeDAO.removerGerente(gerenteEquipeId);
+
+                System.out.println("Gerente removido!");
 
                 break;
 
             case 10:
 
-                equipeDAO.removerGerente(equipeId);
+                System.out.println("\n===== EXCLUIR EQUIPE =====");
 
-                System.out.println("Gerente removido!");
+                System.out.println("Você deseja remover equipe? (S/N)");
 
+                String resposta = scanner.nextLine();
+
+                if(resposta.equalsIgnoreCase("S")) {
+                    equipeDAO.excluirEquipe(equipeId);
+                }
+
+                break;
+
+            case 0:
+
+                System.out.println("Voltando...");
                 break;
 
             default:

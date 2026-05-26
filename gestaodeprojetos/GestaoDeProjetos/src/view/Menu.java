@@ -85,27 +85,33 @@ public class Menu {
             menuPrincipal();
     }
 
+    private boolean podeGerenciar() {
+
+        return usuarioLogado.getPerfil() == Colaborador.Perfil.ADMINISTRADOR || usuarioLogado.getPerfil() == Colaborador.Perfil.GERENTE;
+
+    }
+
     public void menuPrincipal() {
 
         ColaboradorService colaboradorService = new ColaboradorService();
         EquipeService equipeService = new EquipeService();
         ProjetoService projetoService = new ProjetoService();
 
-
         int opcao = -1;
 
         while(opcao != 0) {
 
             System.out.println("\n===== GERENCIADOR DE PROJETOS =====");
-            System.out.println("1 - Cadastrar colaborador");
-            System.out.println("2 - Cadastrar equipe");
-            System.out.println("3 - Cadastrar projeto");
-            System.out.println("4 - Listar colaboradores");
-            System.out.println("5 - Listar equipes");
-            System.out.println("6 - Listar projetos");
 
-            if(usuarioLogado.getPerfil() == Colaborador.Perfil.ADMINISTRADOR || usuarioLogado.getPerfil() == Colaborador.Perfil.GERENTE) {
+            System.out.println("1 - Listar colaboradores");
+            System.out.println("2 - Listar equipes");
+            System.out.println("3 - Listar projetos");
 
+            if(podeGerenciar()) {
+
+                System.out.println("4 - Cadastrar colaborador");
+                System.out.println("5 - Cadastrar equipe");
+                System.out.println("6 - Cadastrar projeto");
                 System.out.println("7 - Configurações");
 
             }
@@ -118,36 +124,45 @@ public class Menu {
             switch(opcao) {
 
                 case 1:
-                    colaboradorService.cadastrarColaborador();
-                    break;
-
-                case 2:
-                    equipeService.cadastrarEquipe();
-                    break;
-
-                case 3:
-                    projetoService.cadastrarProjeto();
-                    break;
-
-                case 4:
                     colaboradorService.listarColaboradores();
                     break;
 
-                case 5:
+                case 2:
                     equipeService.listarEquipes();
                     break;
 
-                case 6:
+                case 3:
                     projetoService.listarProjetos();
                     break;
 
-                case 7:
-                    if(usuarioLogado.getPerfil() == Colaborador.Perfil.ADMINISTRADOR || usuarioLogado.getPerfil() == Colaborador.Perfil.GERENTE) {
-
-                        menuConfiguracoes();
-
+                case 4:
+                    if(podeGerenciar()) {
+                        colaboradorService.cadastrarColaborador();
                     } else {
+                        System.out.println("Acesso negado.");
+                    }
+                    break;
 
+                case 5:
+                    if(podeGerenciar()) {
+                        equipeService.cadastrarEquipe();
+                    } else {
+                        System.out.println("Acesso negado.");
+                    }
+                    break;
+
+                case 6:
+                    if(podeGerenciar()) {
+                        projetoService.cadastrarProjeto();
+                    } else {
+                        System.out.println("Acesso negado.");
+                    }
+                    break;
+
+                case 7:
+                    if(podeGerenciar()) {
+                        menuConfiguracoes();
+                    } else {
                         System.out.println("Acesso negado.");
                     }
                     break;
