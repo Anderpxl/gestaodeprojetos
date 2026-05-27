@@ -62,7 +62,7 @@ public class ProjetoService {
         for(Projeto p : lista) {
 
             System.out.println("ID: " + p.getId());
-            System.out.println("Projeto: " + p.getNomeProjeto());
+            System.out.println("Nome do projeto: " + p.getNomeProjeto());
             System.out.println("Equipe: " + p.getEquipe().getNomeEquipe());
             System.out.println("Descrição: " + p.getDescricao());
             System.out.println("Data Inicial: " + p.getDataInicio());
@@ -91,11 +91,7 @@ public class ProjetoService {
         System.out.println("2 - Alterar descrição");
         System.out.println("3 - Excluir descrição");
         System.out.println("4 - Alterar data final");
-        System.out.println("5 - Adicionar equipe");
-        System.out.println("6 - Trocar equipe");
-        System.out.println("7 - Excluir equipe");
-
-        System.out.print("\nEscolha: ");
+        System.out.println("5 - Alterar equipe");
 
         int opcao = scanner.nextInt();
 
@@ -104,6 +100,8 @@ public class ProjetoService {
         switch (opcao) {
 
             case 1:
+
+                System.out.println("\n===== ALTERAR NOME DO PROJETO =====");
 
                 System.out.print("Novo nome do projeto: ");
 
@@ -116,6 +114,8 @@ public class ProjetoService {
                 break;
 
             case 2:
+
+                System.out.println("\n===== ALTERAR DESCRIÇÃO DO PROJETO =====");
 
                 System.out.print("Nova descrição: ");
 
@@ -137,6 +137,8 @@ public class ProjetoService {
 
             case 4:
 
+                System.out.println("\n===== ALTERAR DATA FINAL DO PROJETO =====");
+
                 System.out.print("Nova data final (AAAA-MM-DD): ");
 
                 String data = scanner.nextLine();
@@ -149,7 +151,7 @@ public class ProjetoService {
 
             case 5:
 
-            case 6:
+                System.out.println("\n===== ALTERAR EQUIPE DO PROJETO =====");
 
                 System.out.print("ID da equipe: ");
 
@@ -157,15 +159,7 @@ public class ProjetoService {
 
                 projetoDAO.alterarEquipe(projetoId, equipeId);
 
-                System.out.println("Equipe atualizada!");
-
-                break;
-
-            case 7:
-
-                projetoDAO.excluirEquipe(projetoId);
-
-                System.out.println("Equipe removida!");
+                System.out.println("Equipe alterada!");
 
                 break;
 

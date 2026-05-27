@@ -17,12 +17,10 @@ public class ProjetoDAO {
         String sql = """
             INSERT INTO gestaodeprojeto.projetos
             (nome_projeto, descricao,
-             data_inicio, data_final, equipe_id)
+             data_inicio, data_final, equipes_id)
 
             VALUES (?, ?, ?, ?, ?)
         """;
-
-        Equipe equipe = new Equipe();
 
         try(
                 Connection conn = Conexao.conectar();
@@ -64,7 +62,7 @@ public class ProjetoDAO {
         FROM gestaodeprojeto.projetos p
 
         JOIN gestaodeprojeto.equipes e
-            ON p.equipe_id = e.id
+            ON p.equipes_id = e.id
     """;
 
         try(
@@ -110,7 +108,7 @@ public class ProjetoDAO {
     public void alterarNomeProjeto(int projetoId, String novoNome) {
 
         String sql = """
-        UPDATE projeto
+        UPDATE gestaodeprojeto.projetos
         SET nome_projeto = ?
         WHERE id = ?
         """;
@@ -136,7 +134,7 @@ public class ProjetoDAO {
     public void alterarDescricao(int projetoId, String descricao) {
 
         String sql = """
-        UPDATE projeto
+        UPDATE gestaodeprojeto.projetos
         SET descricao = ?
         WHERE id = ?
         """;
@@ -162,7 +160,7 @@ public class ProjetoDAO {
     public void excluirDescricao(int projetoId) {
 
         String sql = """
-        UPDATE projeto
+        UPDATE gestaodeprojeto.projetos
         SET descricao = NULL
         WHERE id = ?
         """;
@@ -186,7 +184,7 @@ public class ProjetoDAO {
     public void alterarDataFinal(int projetoId, String novaData) {
 
         String sql = """
-        UPDATE projeto
+        UPDATE gestaodeprojeto.projetos
         SET data_final = ?
         WHERE id = ?
         """;
@@ -209,13 +207,11 @@ public class ProjetoDAO {
         }
     }
 
-    public void alterarEquipe(
-            int projetoId,
-            int equipeId) {
+    public void alterarEquipe(int projetoId, int equipeId) {
 
         String sql = """
-        UPDATE projeto
-        SET equipe_id = ?
+        UPDATE gestaodeprojeto.projetos
+        SET equipes_id = ?
         WHERE id = ?
         """;
 
@@ -228,30 +224,6 @@ public class ProjetoDAO {
             stmt.setInt(1, equipeId);
 
             stmt.setInt(2, projetoId);
-
-            stmt.executeUpdate();
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-        }
-    }
-
-    public void excluirEquipe(int projetoId) {
-
-        String sql = """
-        UPDATE projeto
-        SET equipe_id = NULL
-        WHERE id = ?
-        """;
-
-        try (
-                Connection conn = Conexao.conectar();
-
-                PreparedStatement stmt = conn.prepareStatement(sql)
-        ) {
-
-            stmt.setInt(1, projetoId);
 
             stmt.executeUpdate();
 
