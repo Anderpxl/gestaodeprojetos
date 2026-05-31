@@ -2,11 +2,9 @@ package dao;
 
 import model.Projeto;
 import model.Equipe;
+import model.Tarefa;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,9 +59,9 @@ public class ProjetoDAO {
 
         FROM gestaodeprojeto.projetos p
 
-        JOIN gestaodeprojeto.equipes e
+        LEFT JOIN gestaodeprojeto.equipes e
             ON p.equipes_id = e.id
-    """;
+        """;
 
         try(
                 Connection conn = Conexao.conectar();
@@ -87,13 +85,21 @@ public class ProjetoDAO {
 
                 projeto.setDataFinal(rs.getDate("data_final").toLocalDate());
 
-                Equipe equipe = new Equipe();
+                Integer equipeId = (Integer) rs.getObject("equipe_id");
 
-                equipe.setId(rs.getInt("equipe_id"));
+                if(equipeId != null) {
 
-                equipe.setNomeEquipe(rs.getString("nome_equipe"));
+                    Equipe equipe = new Equipe();
 
-                projeto.setEquipe(equipe);
+                    equipe.setId(equipeId);
+                    equipe.setNomeEquipe(rs.getString("nome_equipe"));
+
+                    projeto.setEquipe(equipe);
+                }
+
+                TarefaDAO tarefaDAO = new TarefaDAO();
+
+                projeto.setTarefas(tarefaDAO.listarPorProjeto(projeto.getId()));
 
                 lista.add(projeto);
             }
@@ -103,6 +109,52 @@ public class ProjetoDAO {
         }
 
         return lista;
+    }
+
+    public List<Tarefa> buscarTarefasProjeto(int projetoId) {
+
+        List<Tarefa> tarefas = new ArrayList<>();
+
+        String sql = """
+        SELECT
+            id,
+            nome_tarefa,
+            descricao,
+            data_inicio,
+            data_final,
+            status_tarefa
+        FROM gestaodeprojeto.tarefas
+        WHERE projeto_id = ?
+        """;
+
+        try(
+                Connection conn = Conexao.conectar();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, projetoId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()) {
+
+                Tarefa tarefa = new Tarefa();
+
+                tarefa.setId(rs.getInt("id"));
+                tarefa.setNomeTarefa(rs.getString("nome_tarefa"));
+                tarefa.setDescricao(rs.getString("descricao"));
+                tarefa.setDataInicio(rs.getDate("data_inicio").toLocalDate());
+                tarefa.setDataFinal(rs.getDate("data_final").toLocalDate());
+                tarefa.setStatus(Tarefa.Status.valueOf(rs.getString("status_tarefa")));
+
+                tarefas.add(tarefa);
+            }
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        return tarefas;
     }
 
     public void alterarNomeProjeto(int projetoId, String novoNome) {
@@ -231,6 +283,108 @@ public class ProjetoDAO {
 
             e.printStackTrace();
         }
+
+    }
+
+    public Projeto buscarPorId(int id) {
+
+        String sql = """
+        SELECT *
+        FROM projetos
+        WHERE id = ?
+        """;
+
+        try(
+                Connection conn = Conexao.conectar();
+
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, id);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+
+                Projeto projeto = new Projeto();
+
+                projeto.setId(rs.getInt("id"));
+
+                projeto.setNomeProjeto(rs.getString("nome_projeto"));
+
+                projeto.setDescricao(rs.getString("descricao"));
+
+                projeto.setDataInicio(rs.getDate("data_inicio").toLocalDate());
+
+                projeto.setDataFinal(rs.getDate("data_final").toLocalDate());
+
+                return projeto;
+            }
+
+        } catch(SQLException e) {
+
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public int contarTarefasProjeto(int projetoId) {
+
+        String sql = """
+        SELECT COUNT(*) AS total
+        FROM gestaodeprojeto.tarefas
+        WHERE projeto_id = ?
+        """;
+
+        try(
+                Connection conn = Conexao.conectar();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, projetoId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+                return rs.getInt("total");
+            }
+
+        } catch(SQLException e) {
+
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int contarTarefasPorStatus(int projetoId, String status) {
+
+        String sql = """
+        SELECT COUNT(*) AS total
+        FROM gestaodeprojeto.tarefas
+        WHERE projeto_id = ?
+        AND status_tarefa = ?
+        """;
+
+        try(
+                Connection conn = Conexao.conectar();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, projetoId);
+
+            stmt.setString(2, status);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+                return rs.getInt("total");
+            }
+
+        } catch(SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

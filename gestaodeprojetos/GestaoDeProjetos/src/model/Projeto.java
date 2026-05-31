@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Projeto {
     private int id;
@@ -9,6 +10,7 @@ public class Projeto {
     private LocalDate dataFinal;
     private String descricao;
     private Equipe equipe;
+    private List<Tarefa> tarefas;
 
     public Projeto(){
 
@@ -26,5 +28,7 @@ public class Projeto {
     public void setDescricao(String descricao) { this.descricao = descricao; }
     public Equipe getEquipe() { return equipe; }
     public void setEquipe(Equipe equipe) { this.equipe = equipe; }
+    public List<Tarefa> getTarefas() { return tarefas; }
+    public void setTarefas(List<Tarefa> tarefas) { this.tarefas = tarefas; }
 
 }

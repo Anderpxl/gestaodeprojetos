@@ -2,6 +2,7 @@ package dao;
 
 import model.Colaborador;
 import model.Equipe;
+import model.Projeto;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -109,6 +110,51 @@ public class EquipeDAO {
         return lista;
     }
 
+    public List<Projeto> buscarProjetosEquipe(int equipeId) {
+
+        List<Projeto> projetos = new ArrayList<>();
+
+        String sql = """
+        SELECT
+            id,
+            nome_projeto,
+            descricao,
+            data_inicio,
+            data_final
+        FROM gestaodeprojeto.projetos
+        WHERE equipes_id = ?
+        """;
+
+        try(
+                Connection conn = Conexao.conectar();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, equipeId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while(rs.next()) {
+
+                Projeto projeto = new Projeto();
+
+                projeto.setId(rs.getInt("id"));
+                projeto.setNomeProjeto(rs.getString("nome_projeto"));
+                projeto.setDescricao(rs.getString("descricao"));
+                projeto.setDataInicio(rs.getDate("data_inicio").toLocalDate());
+                projeto.setDataFinal(rs.getDate("data_final").toLocalDate());
+
+                projetos.add(projeto);
+            }
+
+        } catch(SQLException e) {
+
+            e.printStackTrace();
+        }
+
+        return projetos;
+    }
+
     private List<Colaborador> buscarColaboradoresEquipe(Connection conn, int equipeId) throws SQLException {
 
         List<Colaborador> colaboradores = new ArrayList<>();
@@ -194,12 +240,12 @@ public class EquipeDAO {
 
     public void trocarProjeto(int equipeId, int projetoAtual, int novoProjeto) {
 
-        excluirProjeto(equipeId, projetoAtual);
+        removerProjeto(equipeId, projetoAtual);
 
         adicionarProjeto(equipeId, novoProjeto);
     }
 
-    public void excluirProjeto(int equipeId, int projetoId) {
+    public void removerProjeto(int equipeId, int projetoId) {
 
         String sql = """
         UPDATE gestaodeprojeto.projetos
@@ -352,6 +398,66 @@ public class EquipeDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean verificaEquipe(int equipeId) {
+
+        String sql =
+                "SELECT id FROM equipes WHERE id = ?";
+
+        try(
+                Connection conn = Conexao.conectar();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, equipeId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next();
+
+        } catch(SQLException e) {
+
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Equipe buscarPorId(int equipeId) {
+
+        String sql = """
+        SELECT
+            id,
+            nome_equipe,
+            gerente_id
+        FROM gestaodeprojeto.equipes
+        WHERE id = ?
+        """;
+
+        try(
+                Connection conn = Conexao.conectar();
+                PreparedStatement stmt = conn.prepareStatement(sql)
+        ) {
+
+            stmt.setInt(1, equipeId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            if(rs.next()) {
+
+                Equipe equipe = new Equipe();
+
+                equipe.setId(rs.getInt("id"));
+                equipe.setNomeEquipe(rs.getString("nome_equipe"));
+
+                return equipe;
+            }
+
+        } catch(SQLException e) {
+
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

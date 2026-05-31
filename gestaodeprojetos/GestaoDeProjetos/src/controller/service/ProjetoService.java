@@ -1,8 +1,11 @@
 package controller.service;
 
+import dao.EquipeDAO;
 import dao.ProjetoDAO;
+import dao.TarefaDAO;
 import model.Equipe;
 import model.Projeto;
+import model.Tarefa;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -57,18 +60,50 @@ public class ProjetoService {
 
         List<Projeto> lista = dao.listar();
 
-        System.out.println("\n===== PROJECTOS =====");
+        System.out.println("\n====== PROJETOS ======");
 
         for(Projeto p : lista) {
 
-            System.out.println("ID: " + p.getId());
+            System.out.println("\nProjeto ID: " + p.getId());
             System.out.println("Nome do projeto: " + p.getNomeProjeto());
-            System.out.println("Equipe: " + p.getEquipe().getNomeEquipe());
+
+            if(p.getEquipe() != null) {
+
+                System.out.println("Equipe: " + p.getEquipe().getNomeEquipe());
+
+            } else {
+
+                System.out.println("Equipe: Sem equipe.");
+            }
+
             System.out.println("Descrição: " + p.getDescricao());
             System.out.println("Data Inicial: " + p.getDataInicio());
             System.out.println("Data Final: " + p.getDataFinal());
+            System.out.println("\n======= TAREFAS =======");
 
-            System.out.println("------------------");
+            System.out.println("Quantidade de tarefas: " + (p.getTarefas() == null ? "NULL" : p.getTarefas().size()));
+
+            if(p.getTarefas() != null && !p.getTarefas().isEmpty()) {
+
+                for(Tarefa t : p.getTarefas()) {
+
+                    System.out.println("\nTarefa ID: " + t.getId());
+                    System.out.println("Tarefa: " + t.getNomeTarefa());
+                    System.out.println("Status: " + t.getStatus());
+                    System.out.println("Descrição: " + t.getDescricao());
+                    System.out.println("Início: " + t.getDataInicio());
+                    System.out.println("Final: " + t.getDataFinal());
+
+                    if(t.getStatus() != Tarefa.Status.CONCLUIDA && LocalDate.now().isAfter(t.getDataFinal())) {
+                        t.setStatus(Tarefa.Status.ATRASADA);
+                    }
+                }
+
+            } else {
+                System.out.println("Nenhuma tarefa cadastrada.");
+            }
+
+            System.out.println("=========================");
         }
 
     }
@@ -76,6 +111,8 @@ public class ProjetoService {
     public void editarProjeto() {
 
         Scanner scanner = new Scanner(System.in);
+
+        TarefaService tarefaService = new TarefaService();
 
         ProjetoDAO projetoDAO = new ProjetoDAO();
 
@@ -92,6 +129,9 @@ public class ProjetoService {
         System.out.println("3 - Excluir descrição");
         System.out.println("4 - Alterar data final");
         System.out.println("5 - Alterar equipe");
+        System.out.println("6 - Inserir tarefa");
+        System.out.println("7 - Alterar tarefa");
+        System.out.println("0 - Voltar");
 
         int opcao = scanner.nextInt();
 
@@ -151,6 +191,8 @@ public class ProjetoService {
 
             case 5:
 
+                EquipeDAO equipeDAO = new EquipeDAO();
+
                 System.out.println("\n===== ALTERAR EQUIPE DO PROJETO =====");
 
                 System.out.print("ID da equipe: ");
@@ -159,14 +201,38 @@ public class ProjetoService {
 
                 projetoDAO.alterarEquipe(projetoId, equipeId);
 
+                if(!equipeDAO.verificaEquipe(equipeId)) {
+
+                    System.out.println("Equipe não encontrada.");
+
+                    return;
+                }
+
                 System.out.println("Equipe alterada!");
 
                 break;
+
+            case 6:
+
+                tarefaService.inserirTarefa(projetoId);
+
+                break;
+
+            case 7:
+
+                tarefaService.editarTarefa();
+
+                break;
+
+            case 0:
+
+                return;
 
             default:
 
                 System.out.println("Opção inválida.");
         }
+
     }
 
 }

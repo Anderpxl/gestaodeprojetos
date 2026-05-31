@@ -1,0 +1,35 @@
+===== RELATÓRIO DE PROJETO =====
+
+Projeto: Pokémon
+Data Início: 2026-05-26
+Data Final: 2028-01-01
+
+Total de tarefas: 4
+Pendentes: 3
+Em andamento: 1
+Concluídas: 0
+Atrasadas: 0
+Percentual concluído: 0,00%
+
+===== TAREFAS =====
+
+Tarefa: Capturar Pokémon
+Status: EM_ANDAMENTO
+Data início: 2026-05-31
+Data final: 2026-07-15
+
+Tarefa: Evoluir o pokémon capturado
+Status: PENDENTE
+Data início: 2026-07-16
+Data final: 2026-08-05
+
+Tarefa: Evoluir o pokémon capturado
+Status: PENDENTE
+Data início: 2026-08-10
+Data final: 2026-09-05
+
+Tarefa: Subir de nível
+Status: PENDENTE
+Data início: 2026-09-05
+Data final: 2027-04-07
+

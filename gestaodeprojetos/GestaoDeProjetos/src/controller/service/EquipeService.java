@@ -115,7 +115,7 @@ public class EquipeService {
         System.out.println("\n1 - Alterar nome da equipe");
         System.out.println("2 - Adicionar projeto");
         System.out.println("3 - Alterar projeto");
-        System.out.println("4 - Excluir projeto");
+        System.out.println("4 - Remover projeto");
         System.out.println("5 - Adicionar colaborador");
         System.out.println("6 - Alterar colaborador");
         System.out.println("7 - Remover colaborador");
@@ -182,9 +182,9 @@ public class EquipeService {
 
                 System.out.print("ID do projeto: ");
 
-                int removerProjeto = scanner.nextInt();
+                int rmvProjeto = scanner.nextInt();
 
-                equipeDAO.excluirProjeto(equipeId, removerProjeto);
+                equipeDAO.removerProjeto(equipeId, rmvProjeto);
 
                 System.out.println("Projeto removido!");
 

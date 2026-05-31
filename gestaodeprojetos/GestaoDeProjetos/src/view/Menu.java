@@ -1,9 +1,6 @@
 package view;
 
-import controller.service.ColaboradorService;
-import controller.service.EquipeService;
-import controller.service.LoginService;
-import controller.service.ProjetoService;
+import controller.service.*;
 import dao.ColaboradorDAO;
 import dao.Conexao;
 import dao.EquipeDAO;
@@ -42,8 +39,8 @@ public class Menu {
         while(loginOpcao != 0) {
 
             System.out.println("\n======== TELA INICIAL ========");
-            System.out.println("1. Login");
-            System.out.println("2. Sair");
+            System.out.println("1 - Login");
+            System.out.println("2 - Sair");
 
             loginOpcao = scanner.nextInt();
             scanner.nextLine();
@@ -108,12 +105,11 @@ public class Menu {
             System.out.println("3 - Listar projetos");
 
             if(podeGerenciar()) {
-
                 System.out.println("4 - Cadastrar colaborador");
                 System.out.println("5 - Cadastrar equipe");
                 System.out.println("6 - Cadastrar projeto");
                 System.out.println("7 - Configurações");
-
+                System.out.println("8 - Gerar relatório");
             }
 
             System.out.println("0 - Sair");
@@ -165,6 +161,14 @@ public class Menu {
                     } else {
                         System.out.println("Acesso negado.");
                     }
+                    break;
+
+                case 8:
+
+                    RelatorioService relatorioService = new RelatorioService();
+
+                    relatorioService.menuRelatorios();
+
                     break;
 
                 case 0:
