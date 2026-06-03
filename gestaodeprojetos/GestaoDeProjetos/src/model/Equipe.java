@@ -1,5 +1,5 @@
 package model;
-
+// Classe da equipe
 import java.util.List;
 
 public class Equipe {

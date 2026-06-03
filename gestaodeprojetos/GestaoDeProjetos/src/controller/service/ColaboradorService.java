@@ -9,27 +9,22 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ColaboradorService {
-
+    // Criador de usuário, com inputs de informações do usuário que será cadastrado no sistema/banco de dados
     public void cadastrarColaborador() {
 
         Colaborador colaborador = new Colaborador();
-
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("\n===== CADASTRO DE COLABORADOR =====");
+        System.out.println("\n====== CADASTRO DE COLABORADOR ======");
 
         System.out.print("Nome: ");
         colaborador.setNome(scanner.nextLine());
-
         System.out.print("CPF: ");
         colaborador.setCpf(scanner.nextLine());
-
         System.out.print("Email: ");
         colaborador.setEmail(scanner.nextLine());
-
         System.out.print("Usuário: ");
         colaborador.setUsuario(scanner.nextLine());
-
         System.out.print("Senha: ");
         colaborador.setSenha(scanner.nextLine());
 
@@ -47,34 +42,31 @@ public class ColaboradorService {
             System.out.println("Erro ao cadastrar.");
         }
     }
-
+    // Método para listar colaboradores cadastrados no sistema
     public void listarColaboradores() {
         ColaboradorDAO dao = new ColaboradorDAO();
 
         List<Colaborador> lista = dao.listar();
 
-        System.out.println("\n===== COLABORADORES =====");
+        System.out.println("\n====== COLABORADORES ======");
 
         for(Colaborador c : lista) {
-
             System.out.println("ID: " + c.getId());
             System.out.println("Nome: " + c.getNome());
             System.out.println("Email: " + c.getEmail());
-            System.out.println("Perfil: " + c.getPerfil());
+            System.out.println("Cargo: " + c.getPerfil());
 
             System.out.println("------------------");
         }
     }
-
+    // Método para fazer alterações nos usuários do sistema baseado no ID
     public void editarColaborador() {
 
         Scanner scanner = new Scanner(System.in);
-
         Colaborador  colaborador = new Colaborador();
-
         ColaboradorDAO colaboradorDAO = new ColaboradorDAO();
 
-        System.out.println("===== EDITAR COLABORADOR =====");
+        System.out.println("\n====== EDITAR COLABORADOR ======");
 
         System.out.print("Digite o ID do colaborador: ");
         int colaboradorId = scanner.nextInt();
@@ -88,7 +80,6 @@ public class ColaboradorService {
         System.out.println("4 - Alterar Perfil");
         System.out.println("5 - Excluir Colaborador");
 
-
         int opcao = scanner.nextInt();
 
         scanner.nextLine();
@@ -96,14 +87,12 @@ public class ColaboradorService {
         switch (opcao) {
 
             case 1:
-
                 System.out.print("Novo nome: ");
                 String novoNome = scanner.nextLine();
 
                 colaboradorDAO.trocarNome(colaboradorId, novoNome);
 
                 System.out.println("Nome alterado com sucesso!");
-
                 break;
 
             case 2:
@@ -127,22 +116,18 @@ public class ColaboradorService {
                 }
 
                 colaboradorDAO.trocarEmail(colaboradorId, novoEmail);
-
                 break;
 
             case 3:
-
                 System.out.print("Nova senha: ");
                 String novaSenha = scanner.nextLine();
 
                 colaboradorDAO.trocarSenha(colaboradorId, novaSenha);
 
                 System.out.println("Senha alterada com sucesso!");
-
                 break;
 
             case 4:
-
                 System.out.println("Perfis:");
                 System.out.println("ADMINISTRADOR");
                 System.out.println("GERENTE");
@@ -155,50 +140,37 @@ public class ColaboradorService {
                 colaboradorDAO.trocarPerfil(colaboradorId, novoPerfil);
 
                 if (novoPerfil != "ADMINISTRADOR" || novoPerfil != "GERENTE" || novoPerfil != "COLABORADOR") {
-
                     System.out.println("Perfil inválido.");
                     return;
                 }
-
                 System.out.println("Perfil alterado com sucesso!");
-
                 break;
 
             case 5:
-
                 while(true) {
-
                     System.out.println("Você deseja excluir este colaborador? (S/N): ");
 
                     String resposta = scanner.nextLine().toUpperCase();
 
                     if(!resposta.equals("S") && !resposta.equals("N")) {
-
                         System.out.println("Opção inválida.");
                         continue;
                     }
 
                     if(resposta.equals("S")) {
-
                         boolean sucessoExcluir = colaboradorDAO.excluirUsuario(colaboradorId);
-
                         if(sucessoExcluir) {
-
                             System.out.println("Colaborador excluído com sucesso!");
-
                         } else {
-
                             System.out.println("Erro ao excluir colaborador.");
                         }
                     }
                     break;
                 }
-
                 break;
 
             default:
                 System.out.println("Opção inválida.");
         }
     }
-
 }

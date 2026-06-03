@@ -9,18 +9,17 @@ import java.time.LocalDate;
 import java.util.Scanner;
 
 public class TarefaService {
-
+    // Método para inserir tarefa em um projeto baseado no ID, esse método é invocado no switch/case de editar projeto
     public void inserirTarefa(int projetoId){
 
         Scanner scanner = new Scanner(System.in);
         ProjetoDAO projetoDAO = new ProjetoDAO();
         Tarefa tarefa = new Tarefa();
 
-        System.out.println("\n===== NOVA TAREFA =====");
+        System.out.println("\n====== NOVA TAREFA ======");
 
         System.out.print("Nome da tarefa: ");
         tarefa.setNomeTarefa(scanner.nextLine());
-
         System.out.print("Descrição: ");
         tarefa.setDescricao(scanner.nextLine());
 
@@ -33,7 +32,6 @@ public class TarefaService {
 
         System.out.print("Data início (AAAA-MM-DD): ");
         tarefa.setDataInicio(LocalDate.parse(scanner.nextLine()));
-
         System.out.print("Data final (AAAA-MM-DD): ");
         tarefa.setDataFinal(LocalDate.parse(scanner.nextLine()));
 
@@ -57,27 +55,21 @@ public class TarefaService {
         TarefaDAO tarefaDAO = new TarefaDAO();
 
         if(tarefaDAO.inserirTarefa(tarefa, projetoId)) {
-
             System.out.println("Tarefa cadastrada com sucesso!");
-
         } else {
             System.out.println("Erro ao cadastrar tarefa.");
         }
-
     }
-
+    // Método para editar as tarefas de um projeto baseado no ID
     public void editarTarefa() {
 
         Scanner scanner = new Scanner(System.in);
-
         TarefaDAO tarefaDAO = new TarefaDAO();
 
-        System.out.println("\n===== EDITAR TAREFA =====");
+        System.out.println("\n====== EDITAR TAREFA ======");
 
         System.out.print("ID da tarefa: ");
-
         int tarefaId = scanner.nextInt();
-
         scanner.nextLine();
 
         System.out.println("1 - Alterar nome da tarefa");
@@ -88,61 +80,46 @@ public class TarefaService {
         System.out.println("0 - Voltar");
 
         int opcao = scanner.nextInt();
-
         scanner.nextLine();
 
         switch(opcao) {
-
             case 1:
-
                 System.out.print("Novo nome: ");
-
                 String nome = scanner.nextLine();
 
                 tarefaDAO.alterarNome(tarefaId, nome);
 
                 System.out.println("Nome alterado.");
-
                 break;
 
             case 2:
-
                 System.out.print("Nova descrição: ");
-
                 String descricao = scanner.nextLine();
 
                 tarefaDAO.alterarDescricao(tarefaId, descricao);
 
                 System.out.println("Descrição alterada.");
-
                 break;
 
             case 3:
-
                 System.out.print("Nova data inicial (AAAA-MM-DD): ");
-
                 LocalDate dataInicio = LocalDate.parse(scanner.nextLine());
 
                 tarefaDAO.alterarDataInicio(tarefaId, dataInicio);
 
                 System.out.println("Data inicial alterada.");
-
                 break;
 
             case 4:
-
                 System.out.print("Nova data final (AAAA-MM-DD): ");
-
                 LocalDate dataFinal = LocalDate.parse(scanner.nextLine());
 
                 tarefaDAO.alterarDataFinal(tarefaId, dataFinal);
 
                 System.out.println("Data final alterada.");
-
                 break;
 
             case 5:
-
                 System.out.println("1 - PENDENTE");
                 System.out.println("2 - EM_ANDAMENTO");
                 System.out.println("3 - CONCLUIDA");
@@ -155,21 +132,17 @@ public class TarefaService {
                 switch(statusOpcao) {
                     case 1:
                         novoStatus = Tarefa.Status.PENDENTE;
-
                         break;
 
                     case 2:
                         novoStatus = Tarefa.Status.EM_ANDAMENTO;
-
                         break;
 
                     case 3:
                         novoStatus = Tarefa.Status.CONCLUIDA;
-
                         break;
 
                     case 0:
-
                         return;
 
                     default:
@@ -179,20 +152,14 @@ public class TarefaService {
                 tarefaDAO.alterarStatus(tarefaId, novoStatus);
 
                 System.out.println("Status alterado!");
-
                 break;
 
             case 0:
-
                 return;
 
             default:
-
-                System.out.println(
-                        "Opção inválida."
-                );
+                System.out.println("Opção inválida.");
 
         }
     }
-
 }

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProjetoDAO {
-
+    // Método para inserir um novo projeto no banco de dados
     public boolean inserir(Projeto projeto) {
 
         String sql = """
@@ -22,10 +22,8 @@ public class ProjetoDAO {
 
         try(
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-
             stmt.setString(1, projeto.getNomeProjeto());
             stmt.setString(2, projeto.getDescricao());
             stmt.setDate(3, java.sql.Date.valueOf(projeto.getDataInicio()));
@@ -35,13 +33,12 @@ public class ProjetoDAO {
             stmt.executeUpdate();
 
             return true;
-
         } catch(SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
-
+    // Método para listar um projeto relacionando equipes através do Id no banco de dados
     public List<Projeto> listar() {
 
         List<Projeto> lista = new ArrayList<>();
@@ -65,30 +62,22 @@ public class ProjetoDAO {
 
         try(
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()) {
-
                 Projeto projeto = new Projeto();
 
                 projeto.setId(rs.getInt("id"));
-
                 projeto.setNomeProjeto(rs.getString("nome_projeto"));
-
                 projeto.setDescricao(rs.getString("descricao"));
-
                 projeto.setDataInicio(rs.getDate("data_inicio").toLocalDate());
-
                 projeto.setDataFinal(rs.getDate("data_final").toLocalDate());
-
                 Integer equipeId = (Integer) rs.getObject("equipe_id");
 
                 if(equipeId != null) {
-
                     Equipe equipe = new Equipe();
 
                     equipe.setId(equipeId);
@@ -98,19 +87,16 @@ public class ProjetoDAO {
                 }
 
                 TarefaDAO tarefaDAO = new TarefaDAO();
-
                 projeto.setTarefas(tarefaDAO.listarPorProjeto(projeto.getId()));
 
                 lista.add(projeto);
             }
-
         } catch(SQLException e) {
             e.printStackTrace();
         }
-
         return lista;
     }
-
+    // Método para listar tarefas relacionadas ao projeto através do Id no banco de dados
     public List<Tarefa> buscarTarefasProjeto(int projetoId) {
 
         List<Tarefa> tarefas = new ArrayList<>();
@@ -137,7 +123,6 @@ public class ProjetoDAO {
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()) {
-
                 Tarefa tarefa = new Tarefa();
 
                 tarefa.setId(rs.getInt("id"));
@@ -149,14 +134,12 @@ public class ProjetoDAO {
 
                 tarefas.add(tarefa);
             }
-
         } catch(SQLException e) {
             e.printStackTrace();
         }
-
         return tarefas;
     }
-
+    // Método para alterar nome do projeto através do Id no banco de dados
     public void alterarNomeProjeto(int projetoId, String novoNome) {
 
         String sql = """
@@ -167,22 +150,19 @@ public class ProjetoDAO {
 
         try (
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setString(1, novoNome);
-
             stmt.setInt(2, projetoId);
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
     }
-
+    // Método para alterar descrição do projeto através do Id no banco de dados
     public void alterarDescricao(int projetoId, String descricao) {
 
         String sql = """
@@ -193,22 +173,19 @@ public class ProjetoDAO {
 
         try (
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setString(1, descricao);
-
             stmt.setInt(2, projetoId);
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
     }
-
+    // Método para excluir descrição do projeto através do Id no banco de dados
     public void excluirDescricao(int projetoId) {
 
         String sql = """
@@ -219,7 +196,6 @@ public class ProjetoDAO {
 
         try (
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
@@ -228,11 +204,10 @@ public class ProjetoDAO {
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
     }
-
+    // Método para alterar a data final do projeto através do Id no banco de dados
     public void alterarDataFinal(int projetoId, String novaData) {
 
         String sql = """
@@ -243,22 +218,19 @@ public class ProjetoDAO {
 
         try (
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setDate(1, java.sql.Date.valueOf(novaData));
-
             stmt.setInt(2, projetoId);
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
     }
-
+    // Método para alterar equipe de um projeto através do Id no banco de dados
     public void alterarEquipe(int projetoId, int equipeId) {
 
         String sql = """
@@ -269,23 +241,19 @@ public class ProjetoDAO {
 
         try (
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
             stmt.setInt(1, equipeId);
-
             stmt.setInt(2, projetoId);
 
             stmt.executeUpdate();
 
         } catch (SQLException e) {
-
             e.printStackTrace();
         }
-
     }
-
+    // Método para buscar um projeto no banco de dados através do Id
     public Projeto buscarPorId(int id) {
 
         String sql = """
@@ -296,39 +264,29 @@ public class ProjetoDAO {
 
         try(
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-
             stmt.setInt(1, id);
 
             ResultSet rs = stmt.executeQuery();
 
             if(rs.next()) {
-
                 Projeto projeto = new Projeto();
 
                 projeto.setId(rs.getInt("id"));
-
                 projeto.setNomeProjeto(rs.getString("nome_projeto"));
-
                 projeto.setDescricao(rs.getString("descricao"));
-
                 projeto.setDataInicio(rs.getDate("data_inicio").toLocalDate());
-
                 projeto.setDataFinal(rs.getDate("data_final").toLocalDate());
 
                 return projeto;
             }
-
         } catch(SQLException e) {
-
             e.printStackTrace();
         }
-
         return null;
     }
-
+    // Método para contar a quantidade de tarefas que há em um projeto no banco de dados através do Id
     public int contarTarefasProjeto(int projetoId) {
 
         String sql = """
@@ -351,12 +309,11 @@ public class ProjetoDAO {
             }
 
         } catch(SQLException e) {
-
             e.printStackTrace();
         }
         return 0;
     }
-
+    // Método para verificar a quantidade das tarefas baseado no status de um projeto através do Id no banco de dados
     public int contarTarefasPorStatus(int projetoId, String status) {
 
         String sql = """
@@ -372,7 +329,6 @@ public class ProjetoDAO {
         ) {
 
             stmt.setInt(1, projetoId);
-
             stmt.setString(2, status);
 
             ResultSet rs = stmt.executeQuery();
@@ -380,11 +336,9 @@ public class ProjetoDAO {
             if(rs.next()) {
                 return rs.getInt("total");
             }
-
         } catch(SQLException e) {
             e.printStackTrace();
         }
         return 0;
     }
-
 }

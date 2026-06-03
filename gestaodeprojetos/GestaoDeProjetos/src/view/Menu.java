@@ -21,23 +21,19 @@ import java.util.Scanner;
 public class Menu {
 
     Scanner scanner = new Scanner(System.in);
-
     LoginService loginService = new LoginService();
 
     private Colaborador usuarioLogado;
 
     public void iniciar() {
-
         realizarLogin();
-
     }
-
+    // Menu para realizar login do usuário.
     private void realizarLogin() {
 
         int loginOpcao = -1;
 
         while(loginOpcao != 0) {
-
             System.out.println("\n======== TELA INICIAL ========");
             System.out.println("1 - Login");
             System.out.println("2 - Sair");
@@ -59,7 +55,7 @@ public class Menu {
             }
         }
     }
-
+    // Método para receber login e senha de usuário e autentica-lo.
     public void fazerLogin(){
 
         System.out.println("===== LOGIN =====");
@@ -73,21 +69,17 @@ public class Menu {
         usuarioLogado = loginService.autenticar(usuario, senha);
 
         if(usuarioLogado == null) {
-
             System.out.println("Usuário ou senha inválidos.");
             return;
-
         }
             System.out.println("Bem-vindo, " + usuarioLogado.getNome());
             menuPrincipal();
     }
-
+    //Verificador de usuário para mostrar privilégios de admin e gerente
     private boolean podeGerenciar() {
-
         return usuarioLogado.getPerfil() == Colaborador.Perfil.ADMINISTRADOR || usuarioLogado.getPerfil() == Colaborador.Perfil.GERENTE;
-
     }
-
+    //Menu principal do gerenciador de projetos
     public void menuPrincipal() {
 
         ColaboradorService colaboradorService = new ColaboradorService();
@@ -164,11 +156,8 @@ public class Menu {
                     break;
 
                 case 8:
-
                     RelatorioService relatorioService = new RelatorioService();
-
                     relatorioService.menuRelatorios();
-
                     break;
 
                 case 0:
@@ -180,7 +169,7 @@ public class Menu {
             }
         }
     }
-
+    // Menu de configurações para fazer alterações nos colaboradores, equipes e projetos.
     public void menuConfiguracoes() {
 
         ColaboradorService colaboradorService = new ColaboradorService();
@@ -221,8 +210,7 @@ public class Menu {
 
             default:
                 System.out.println("Opção inválida");
-        }
+            }
         }
     }
-
 }

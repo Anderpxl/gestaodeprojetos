@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TarefaDAO {
-
+    // Método para inserir uma tarefa no banco de dados
     public boolean inserirTarefa(Tarefa tarefa, int projetoId){
 
         String sql = """
@@ -26,10 +26,8 @@ public class TarefaDAO {
 
         try(
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-
             stmt.setString(1, tarefa.getNomeTarefa());
             stmt.setString(2, tarefa.getDescricao());
             stmt.setDate(3, Date.valueOf(tarefa.getDataInicio()));
@@ -40,15 +38,12 @@ public class TarefaDAO {
             stmt.executeUpdate();
 
             return true;
-
         } catch(SQLException e) {
-
             e.printStackTrace();
             return false;
         }
-
     }
-
+    // Método para listar/buscar as tarefas que estão relacionada à um projeto através do Id no banco de dados
     public List<Tarefa> listarPorProjeto(int projetoId) {
 
         List<Tarefa> tarefas = new ArrayList<>();
@@ -62,7 +57,6 @@ public class TarefaDAO {
 
         try(
                 Connection conn = Conexao.conectar();
-
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
 
@@ -71,7 +65,6 @@ public class TarefaDAO {
             ResultSet rs = stmt.executeQuery();
 
             while(rs.next()) {
-
                 Tarefa tarefa = new Tarefa();
 
                 tarefa.setId(rs.getInt("id"));
@@ -86,10 +79,9 @@ public class TarefaDAO {
         } catch(SQLException e) {
             e.printStackTrace();
         }
-
         return tarefas;
     }
-
+    // Método para alterar o nome de um tarefa através do Id no banco de dados
     public boolean alterarNome(int tarefaId, String novoNome) {
 
         String sql = """
@@ -102,7 +94,6 @@ public class TarefaDAO {
                 Connection conn = Conexao.conectar();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-
             stmt.setString(1, novoNome);
             stmt.setInt(2, tarefaId);
 
@@ -113,7 +104,7 @@ public class TarefaDAO {
             return false;
         }
     }
-
+    // Método para alterar a descrição de uma tarefa através do Id no banco de dados
     public boolean alterarDescricao(int tarefaId, String descricao) {
 
         String sql = """
@@ -126,7 +117,6 @@ public class TarefaDAO {
                 Connection conn = Conexao.conectar();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-
             stmt.setString(1, descricao);
             stmt.setInt(2, tarefaId);
 
@@ -137,7 +127,7 @@ public class TarefaDAO {
             return false;
         }
     }
-
+    // Método para alterar a data de início de uma tarefa através do Id no banco de dados
     public boolean alterarDataInicio(int tarefaId, LocalDate dataInicio) {
 
         String sql = """
@@ -150,7 +140,6 @@ public class TarefaDAO {
                 Connection conn = Conexao.conectar();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-
             stmt.setDate(1, Date.valueOf(dataInicio));
             stmt.setInt(2, tarefaId);
 
@@ -161,7 +150,7 @@ public class TarefaDAO {
             return false;
         }
     }
-
+    // Método para alterar a data final de uma tarefa através do Id no banco de dados
     public boolean alterarDataFinal(int tarefaId, LocalDate dataFinal) {
 
         String sql = """
@@ -174,7 +163,6 @@ public class TarefaDAO {
                 Connection conn = Conexao.conectar();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-
             stmt.setDate(1, Date.valueOf(dataFinal));
             stmt.setInt(2, tarefaId);
 
@@ -185,7 +173,7 @@ public class TarefaDAO {
             return false;
         }
     }
-
+    // Método para buscar uma tarefa no banco de dados através do Id, foi inserido caso fosse necessário efetuar essa busca futuramente
     public Tarefa buscarPorId(int tarefaId) {
 
         String sql = """
@@ -198,7 +186,6 @@ public class TarefaDAO {
                 Connection conn = Conexao.conectar();
                 PreparedStatement stmt = conn.prepareStatement(sql)
         ) {
-
             stmt.setInt(1, tarefaId);
 
             ResultSet rs = stmt.executeQuery();
@@ -217,13 +204,11 @@ public class TarefaDAO {
             }
 
         } catch(SQLException e) {
-
             e.printStackTrace();
         }
-
         return null;
     }
-
+    // Método para alterar o status da tarefa através do Id no banco de dados
     public boolean alterarStatus(int tarefaId, Tarefa.Status status) {
 
         String sql = """
@@ -238,17 +223,13 @@ public class TarefaDAO {
         ) {
 
             stmt.setString(1, status.name());
-
             stmt.setInt(2, tarefaId);
 
             return stmt.executeUpdate() > 0;
 
         } catch(SQLException e) {
-
             e.printStackTrace();
-
             return false;
         }
     }
-
 }

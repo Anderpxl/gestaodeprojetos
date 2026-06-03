@@ -1,5 +1,5 @@
 package model;
-
+// Classe do colaborador
 public class Colaborador {
     private int id;
     private String nome;

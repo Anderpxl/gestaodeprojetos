@@ -15,74 +15,59 @@ import java.util.List;
 import java.util.Scanner;
 
 public class RelatorioService {
-
+    // Método para gerar um menu para gerar relatórios de projeto ou equipe
     public void menuRelatorios() {
 
         Scanner scanner = new Scanner(System.in);
-
         RelatorioService relatorioService = new RelatorioService();
 
         int opcao = -1;
 
         while(opcao != 0) {
-
-            System.out.println("\n===== RELATÓRIOS =====");
+            System.out.println("\n====== RELATÓRIOS ======");
 
             System.out.println("1 - Relatório de Projeto");
             System.out.println("2 - Relatório de Equipe");
             System.out.println("0 - Voltar");
 
             opcao = scanner.nextInt();
-
             scanner.nextLine();
 
             switch(opcao) {
-
                 case 1:
-
                     System.out.print("Digite o ID do projeto: ");
 
                     int projetoId = scanner.nextInt();
-
                     scanner.nextLine();
 
                     relatorioService.gerarRelatorioProjeto(projetoId);
-
                     break;
 
                 case 2:
-
                     System.out.print("Digite o ID da equipe: ");
 
                     int equipeId = scanner.nextInt();
-
                     scanner.nextLine();
 
                     relatorioService.gerarRelatorioEquipe(equipeId);
-
                     break;
 
                 case 0:
-
                     return;
 
                 default:
-
                     System.out.println("Opção inválida.");
             }
         }
     }
-
+    // Método para gerar relatório de um projeto baseado no ID e relatar ele em um arquivo txt e salvar na pasta "relatorios"
     public void gerarRelatorioProjeto(int projetoId) {
 
         ProjetoDAO projetoDAO = new ProjetoDAO();
-
         Projeto projeto = projetoDAO.buscarPorId(projetoId);
 
         if(projeto == null) {
-
             System.out.println("Projeto não encontrado.");
-
             return;
         }
 
@@ -97,7 +82,6 @@ public class RelatorioService {
         LocalDateTime agora = LocalDateTime.now();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-
         String dataHora = agora.format(formatter);
 
         String nomeProjeto = projeto.getNomeProjeto().replaceAll("[^a-zA-Z0-9_-]", "_");
@@ -105,14 +89,11 @@ public class RelatorioService {
         String nomeArquivo = "relatorios/Projeto_" + nomeProjeto + "_" + dataHora + ".txt";
 
         if(projeto == null) {
-
             System.out.println("Projeto não encontrado.");
-
             return;
         }
 
         int total = projetoDAO.contarTarefasProjeto(projetoId);
-
         int pendentes = projetoDAO.contarTarefasPorStatus(projetoId, "PENDENTE");
         int andamento = projetoDAO.contarTarefasPorStatus(projetoId, "EM_ANDAMENTO");
         int concluidas = projetoDAO.contarTarefasPorStatus(projetoId, "CONCLUIDA");
@@ -146,7 +127,6 @@ public class RelatorioService {
             writer.write("===== TAREFAS =====\n\n");
 
             for(Tarefa t : tarefas) {
-
                 writer.write("Tarefa: " + t.getNomeTarefa() + "\n");
                 writer.write("Status: " + t.getStatus() + "\n");
                 writer.write("Data início: " + t.getDataInicio() + "\n");
@@ -162,24 +142,19 @@ public class RelatorioService {
             e.printStackTrace();
         }
     }
-
+    // Método para gerar relatório de uma equipe baseado no ID e relatar ele em um arquivo txt e salvar na pasta "relatorios"
     public void gerarRelatorioEquipe(int equipeId) {
 
         EquipeDAO equipeDAO = new EquipeDAO();
-
         Equipe equipe = equipeDAO.buscarPorId(equipeId);
 
         if(equipe == null) {
-
             System.out.println("Equipe não encontrada.");
-
             return;
         }
 
         LocalDateTime agora = LocalDateTime.now();
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
-
         String dataHora = agora.format(formatter);
 
         String nomeEquipe = equipe.getNomeEquipe().replaceAll("[^a-zA-Z0-9_-]", "_");
@@ -187,9 +162,7 @@ public class RelatorioService {
         String nomeArquivo = "relatorios/Equipe_" + nomeEquipe + "_" + dataHora + ".txt";
 
         if(equipe == null) {
-
             System.out.println("Equipe não encontrada.");
-
             return;
         }
 
@@ -204,11 +177,9 @@ public class RelatorioService {
             writer.write("Projetos vinculados: " + projetos.size() + "\n\n");
 
             for(Projeto p : projetos) {
-
                 writer.write("Projeto: " + p.getNomeProjeto() + "\n");
                 writer.write("Início: " + p.getDataInicio() + "\n");
                 writer.write("Final: " + p.getDataFinal() + "\n\n");
-
             }
 
             writer.close();
@@ -217,9 +188,7 @@ public class RelatorioService {
             System.out.println("Relatório salvo em: " + new File(nomeArquivo).getAbsolutePath());
 
         } catch(IOException e) {
-
             e.printStackTrace();
         }
     }
-
 }

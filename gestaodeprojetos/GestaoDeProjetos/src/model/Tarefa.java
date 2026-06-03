@@ -1,5 +1,5 @@
 package model;
-
+// Classe da tarefa
 import java.time.LocalDate;
 
 public class Tarefa {

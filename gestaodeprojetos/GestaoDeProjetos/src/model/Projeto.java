@@ -1,5 +1,5 @@
 package model;
-
+// Classe do projeto
 import java.time.LocalDate;
 import java.util.List;
 
