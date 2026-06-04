@@ -1,14 +1,14 @@
 CREATE DATABASE gestaodeprojeto;
 USE gestaodeprojeto;
 
-INSERT INTO gestaodeprojeto.colaboradores (cpf, usuario, senha, nome, email, perfil) VALUES ('11111111111', 'ander', 'password', 'Anderson Elias', 'ander@gmail.com', 'ADMINISTRADOR');
-
-ALTER TABLE gestaodeprojeto.projetos MODIFY equipes_id INT NULL;
+-- Este é um comando para criar o seu primeiro usuário administrador após criar suas tabelas no banco de dados
+INSERT INTO gestaodeprojeto.colaboradores (cpf, usuario, senha, nome, email, perfil) VALUES ('11111111111', 'admin', 'password', 'Administrador', 'admin@admin.com', 'ADMINISTRADOR');
 
 SELECT * FROM gestaodeprojeto.colaboradores;
 SELECT * FROM gestaodeprojeto.equipes;
 SELECT * FROM gestaodeprojeto.projetos;
 
+-- Este comando cria a tabela para gravar as informações dos novos colaboradores
 CREATE TABLE gestaodeprojeto.colaboradores(
 id INT AUTO_INCREMENT PRIMARY KEY,
 cpf VARCHAR(11) NOT NULL UNIQUE KEY,
@@ -19,6 +19,7 @@ email VARCHAR(100) NOT NULL UNIQUE KEY,
 perfil ENUM('ADMINISTRADOR','GERENTE','COLABORADOR')
 );
 
+-- Este comando cria a tabela para gravar as informações das equipes e se relacionar com a tabela de colaboradores
 CREATE TABLE gestaodeprojeto.equipes(
 id INT AUTO_INCREMENT PRIMARY KEY,
 nome_equipe VARCHAR(100) NOT NULL,
@@ -27,6 +28,7 @@ gerente_id INT NULL,
 FOREIGN KEY (gerente_id) REFERENCES colaboradores(id)
 );
 
+-- Combando para relacionar colaboradores com a equipe
 CREATE TABLE gestaodeprojeto.equipe_colaborador(
 equipes_id INT,
 colaboradores_id INT,
@@ -37,6 +39,7 @@ FOREIGN KEY (equipes_id) REFERENCES equipes(id),
 FOREIGN KEY (colaboradores_id) REFERENCES colaboradores(id)
 );
 
+-- Este comando cria a tabela para gravar as informações dos projetos criados e se relacionar com a tabela de equipes
 CREATE TABLE gestaodeprojeto.projetos(
 id INT AUTO_INCREMENT PRIMARY KEY,
 nome_projeto VARCHAR(255) NOT NULL,
@@ -48,6 +51,7 @@ equipes_id INT NULL,
 FOREIGN KEY (equipes_id) REFERENCES equipes(id)
 );
 
+-- Este comando cria a tabela para gravar informações anteriores de colaboradores que sejam alteradas ou excluidas
 CREATE TABLE gestaodeprojeto.historico_colaboradores(
 id INT AUTO_INCREMENT PRIMARY KEY,
 cpf VARCHAR(11) NOT NULL UNIQUE KEY,
@@ -58,16 +62,18 @@ email VARCHAR(100) NOT NULL UNIQUE KEY,
 perfil VARCHAR(50) NOT NULL
 );
 
+-- Este comando é para relacionar colaboradores com a equipe
 CREATE TABLE gestaodeprojeto.equipe_colaboradores(
-	equipes_id INT NOT NULL,
-    colaboradores_id INT NOT NULL,
+equipes_id INT NOT NULL,
+colaboradores_id INT NOT NULL,
     
-    PRIMARY KEY (equipes_id, colaboradores_id),
+PRIMARY KEY (equipes_id, colaboradores_id),
     
-    FOREIGN KEY (equipes_id) REFERENCES equipes(id),
-    FOREIGN KEY (colaboradores_id) REFERENCES colaboradores(id)
+FOREIGN KEY (equipes_id) REFERENCES equipes(id),
+FOREIGN KEY (colaboradores_id) REFERENCES colaboradores(id)
 );
 
+-- Este comando é para salvar as antigas informações dos colaboradores na tabela
 DELIMITER $
 CREATE TRIGGER tr_usuarios_contas BEFORE DELETE ON gestaodeprojeto.colaboradores FOR EACH ROW
 BEGIN
@@ -75,6 +81,7 @@ BEGIN
 END$
 DELIMITER ;
 
+-- Este comando é para salvar as antigas informações dos colaboradores na tabela
 DELIMITER &
 CREATE TRIGGER tr_senhas_emails_usuarios BEFORE UPDATE ON gestaodeprojeto.colaboradores FOR EACH ROW
 BEGIN
